@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
+const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/cloudnotebook';
 
 const connectToMongo = () => {
-
-    mongoose.connect('mongodb://127.0.0.1:27017/cloudnotebook')
+    mongoose.connect(dbUrl)
         .then(() => {
             console.log("CONNECTION OPEN!!!")
         })
