@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 require("dotenv").config()
 
 app.get('/', (req, res) => {
@@ -9,6 +10,7 @@ app.get('/', (req, res) => {
 
 // middleware
 app.use(express.json());
+app.use(cors());
 
 // db connection
 const dbConnection = require('./db/dbConnection');
