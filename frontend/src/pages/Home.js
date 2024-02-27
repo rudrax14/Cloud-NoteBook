@@ -1,7 +1,7 @@
 import React from 'react'
 
-import Notes from './Notes';
-import AddNote from './AddNote';
+import Notes from '../components/Notes';
+import AddNote from '../components/AddNote';
 function Home(props) {
     const { showAlert } = props
     return (

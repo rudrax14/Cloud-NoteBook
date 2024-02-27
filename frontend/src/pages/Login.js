@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 
 const Login = (props) => {
@@ -8,25 +9,19 @@ const Login = (props) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await fetch("http://localhost:5000/api/auth/login", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email: credentials.email, password: credentials.password })
-        });
-        const json = await response.json()
-        // console.log(json);
-        if (json.success) {
-            localStorage.setItem('token', json.authtoken);
-            navigate("/");
-            props.showAlert('Login Success', 'success')
-        }
-        else {
-            props.showAlert('Invalid Credentials', 'danger')
-        }
-    }
+        axios.post('http://localhost:5000/api/v1/login', credentials)
+            .then(response => {
+                console.log(response)
+                localStorage.setItem('token', response.data.token);
+                navigate("/");
+                props.showAlert('Login Success', 'success')
+            })
+            .catch(err => {
+                console.log(err)
+                props.showAlert('Invalid Credentials', 'danger')
+            })
 
+    }
     const onChange = (e) => {
         setCredentials({ ...credentials, [e.target.name]: e.target.value })
     }
