@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import Navbar from './components/Navbar'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import NoteState from './context/notes/NoteState';
 import Alert from './components/Alert';
 import Home from './pages/Home';
 import About from './pages/About';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import { Provider } from 'react-redux';
+import store from './redux/Store';
 
 
 
@@ -25,7 +26,7 @@ export default function App() {
   }
   return (
     <>
-      <NoteState>
+      <Provider store={store}>
         <BrowserRouter>
           <Navbar showAlert={showAlert} />
           <Alert alert={alert} />
@@ -38,7 +39,7 @@ export default function App() {
             </Routes>
           </div>
         </BrowserRouter>
-      </NoteState>
+      </Provider>
 
     </>
   )

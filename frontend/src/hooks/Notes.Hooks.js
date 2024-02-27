@@ -1,12 +1,14 @@
-import NoteContext from "./noteContext";
-import { useState } from "react";
-import axios from "axios";
+import { useState } from 'react';
+import axios from 'axios';
+import { useDispatch } from 'react-redux';
+// import { setNotes } from './yourSliceFile'; // Import your slice actions here
 
-const NoteState = (props) => {
-    const host = 'http://localhost:5000/api/v1';
-    const [notes, setNotes] = useState([]);
+const host = 'http://localhost:5000/api/v1';
 
-    // Get all notes
+const useNotes = () => {
+    const [notes, setNotesState] = useState([]);
+    const dispatch = useDispatch();
+
     const getNotes = async () => {
         try {
             const jwtToken = localStorage.getItem('token');
@@ -15,13 +17,12 @@ const NoteState = (props) => {
                     Authorization: `Bearer ${jwtToken}`,
                 }
             });
-            setNotes(response.data);
+            setNotesState(response.data);
         } catch (error) {
             console.log(error);
         }
     };
 
-    // Add note
     const addNote = async (title, description, tag) => {
         try {
             const jwtToken = localStorage.getItem('token');
@@ -30,13 +31,12 @@ const NoteState = (props) => {
                     Authorization: `Bearer ${jwtToken}`,
                 }
             });
-            setNotes([...notes, response.data]);
+            setNotesState([...notes, response.data]);
         } catch (error) {
             console.log(error);
         }
     };
 
-    // Delete note
     const deleteNote = async (id) => {
         try {
             const jwtToken = localStorage.getItem('token');
@@ -45,13 +45,12 @@ const NoteState = (props) => {
                     Authorization: `Bearer ${jwtToken}`,
                 }
             });
-            setNotes(notes.filter(note => note._id !== id));
+            setNotesState(notes.filter(note => note._id !== id));
         } catch (error) {
             console.log(error);
         }
     };
 
-    // Edit note
     const editNote = async (id, title, description, tag) => {
         try {
             const jwtToken = localStorage.getItem('token');
@@ -60,17 +59,13 @@ const NoteState = (props) => {
                     Authorization: `Bearer ${jwtToken}`,
                 }
             });
-            setNotes(notes.map(note => (note._id === id ? { ...note, title, description, tag } : note)));
+            setNotesState(notes.map(note => (note._id === id ? { ...note, title, description, tag } : note)));
         } catch (error) {
             console.log(error);
         }
     };
 
-    return (
-        <NoteContext.Provider value={{ notes, addNote, deleteNote, editNote, getNotes }}>
-            {props.children}
-        </NoteContext.Provider>
-    );
+    return { notes, getNotes, addNote, deleteNote, editNote, setNotesState };
 };
 
-export default NoteState;
+export default useNotes;

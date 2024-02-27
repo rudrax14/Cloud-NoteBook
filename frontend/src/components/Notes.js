@@ -1,12 +1,13 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import getNotes from '../hooks/Notes.Hooks';
+import notes from '../hooks/Notes.Hooks';
+import editNote from '../hooks/Notes.Hooks';
 
-import noteContext from '../context/notes/noteContext'
+// import noteContext from '../context/notes/noteContext'
 import Noteitem from './Noteitem';
 function Notes(props) {
     let navigate = useNavigate();
-    const context = useContext(noteContext)
-    const { notes, getNotes, editNote } = context;
     useEffect(() => {
         if (localStorage.getItem('token')) {
             getNotes()
