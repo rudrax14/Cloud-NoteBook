@@ -1,22 +1,39 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import getNotes from '../hooks/Notes.Hooks';
-import notes from '../hooks/Notes.Hooks';
-import editNote from '../hooks/Notes.Hooks';
-
-// import noteContext from '../context/notes/noteContext'
+import useNotes from '../hooks/Notes.Hooks';
+import { useSelector } from 'react-redux';
 import Noteitem from './Noteitem';
+
+
+
+
+
+
+
+
+
+
+
 function Notes(props) {
+
+    const { fetchNotes, fetchEditNote } = useNotes()
+
+    const notes = useSelector(state => state.notes);
+    // console.log("notes", notes)
+
     let navigate = useNavigate();
     useEffect(() => {
         if (localStorage.getItem('token')) {
-            getNotes()
+            fetchNotes()
         }
         else {
             navigate("/login");
         }
         // eslint-disable-next-line
     }, [])
+
+
+
     const [note, setNote] = useState({ id: '', etitle: '', edescription: '', etag: '' })
 
 
@@ -25,15 +42,12 @@ function Notes(props) {
     const updateNote = (currentNote) => {
         ref.current.click();
         setNote({ id: currentNote._id, etitle: currentNote.title, edescription: currentNote.description, etag: currentNote.tag })
-
-
     }
 
 
 
     const handleClick = (e) => {
-        // console.log(note)
-        editNote(note.id, note.etitle, note.edescription, note.etag)
+        fetchEditNote(note.id, note.etitle, note.edescription, note.etag)
         refClose.current.click()
         props.showAlert("Updated successfully", "success");
     }

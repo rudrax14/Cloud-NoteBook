@@ -1,15 +1,13 @@
-import { useState } from 'react';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-// import { setNotes } from './yourSliceFile'; // Import your slice actions here
+import { getNotes, addNote, deleteNote, editNote } from '../redux/slices/noteSlice';
 
 const host = 'http://localhost:5000/api/v1';
 
 const useNotes = () => {
-    const [notes, setNotesState] = useState([]);
     const dispatch = useDispatch();
 
-    const getNotes = async () => {
+    const fetchNotes = async () => {
         try {
             const jwtToken = localStorage.getItem('token');
             const response = await axios.get(`${host}/fetchnotes`, {
@@ -17,13 +15,16 @@ const useNotes = () => {
                     Authorization: `Bearer ${jwtToken}`,
                 }
             });
-            setNotesState(response.data);
+
+
+            dispatch(getNotes(response.data));
+
         } catch (error) {
             console.log(error);
         }
     };
 
-    const addNote = async (title, description, tag) => {
+    const fetchAddNote = async (title, description, tag) => {
         try {
             const jwtToken = localStorage.getItem('token');
             const response = await axios.post(`${host}/createnote`, { title, description, tag }, {
@@ -31,13 +32,14 @@ const useNotes = () => {
                     Authorization: `Bearer ${jwtToken}`,
                 }
             });
-            setNotesState([...notes, response.data]);
+            console.log("hook-fetchAddNote", response.data);
+            dispatch(addNote(response.data));
         } catch (error) {
             console.log(error);
         }
     };
 
-    const deleteNote = async (id) => {
+    const fetchDeleteNote = async (id) => {
         try {
             const jwtToken = localStorage.getItem('token');
             await axios.delete(`${host}/deleteNote/${id}`, {
@@ -45,13 +47,13 @@ const useNotes = () => {
                     Authorization: `Bearer ${jwtToken}`,
                 }
             });
-            setNotesState(notes.filter(note => note._id !== id));
+            dispatch(deleteNote(id));
         } catch (error) {
             console.log(error);
         }
     };
 
-    const editNote = async (id, title, description, tag) => {
+    const fetchEditNote = async (id, title, description, tag) => {
         try {
             const jwtToken = localStorage.getItem('token');
             await axios.put(`${host}/updateNote/${id}`, { title, description, tag }, {
@@ -59,13 +61,15 @@ const useNotes = () => {
                     Authorization: `Bearer ${jwtToken}`,
                 }
             });
-            setNotesState(notes.map(note => (note._id === id ? { ...note, title, description, tag } : note)));
+
+            dispatch(editNote({ id, title, description, tag }));
+
         } catch (error) {
             console.log(error);
         }
     };
 
-    return { notes, getNotes, addNote, deleteNote, editNote, setNotesState };
+    return { fetchNotes, fetchAddNote, fetchDeleteNote, fetchEditNote };
 };
 
 export default useNotes;
