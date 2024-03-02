@@ -1,63 +1,49 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { notesState } from '../store/atoms/noteAtoms';
 import useNotes from '../hooks/Notes.Hooks';
-import { useSelector } from 'react-redux';
 import Noteitem from './Noteitem';
 
-
-
-
-
-
-
-
-
-
-
 function Notes(props) {
-
-    const { fetchNotes, fetchEditNote } = useNotes()
-
-    const notes = useSelector(state => state.notes);
-    // console.log("notes", notes)
+    const { fetchNotes, fetchEditNote } = useNotes();
+    const notes = useRecoilValue(notesState);
 
     let navigate = useNavigate();
     useEffect(() => {
         if (localStorage.getItem('token')) {
-            fetchNotes()
-        }
-        else {
+            fetchNotes();
+        } else {
             navigate("/login");
         }
-        // eslint-disable-next-line
-    }, [])
+    }, []);
 
+    const [note, setNote] = useState({ id: '', etitle: '', edescription: '', etag: '' });
 
-
-    const [note, setNote] = useState({ id: '', etitle: '', edescription: '', etag: '' })
-
-
-    const ref = useRef(null)
-    const refClose = useRef(null)
+    const ref = useRef(null);
+    const refClose = useRef(null);
     const updateNote = (currentNote) => {
         ref.current.click();
-        setNote({ id: currentNote._id, etitle: currentNote.title, edescription: currentNote.description, etag: currentNote.tag })
-    }
-
-
+        setNote({
+            id: currentNote._id,
+            etitle: currentNote.title,
+            edescription: currentNote.description,
+            etag: currentNote.tag
+        });
+    };
 
     const handleClick = (e) => {
-        fetchEditNote(note.id, note.etitle, note.edescription, note.etag)
-        refClose.current.click()
+        fetchEditNote(note.id, note.etitle, note.edescription, note.etag);
+        refClose.current.click();
         props.showAlert("Updated successfully", "success");
-    }
+    };
+
     const onChange = (e) => {
-        setNote({ ...note, [e.target.name]: e.target.value })
-    }
+        setNote({ ...note, [e.target.name]: e.target.value });
+    };
+
     return (
         <>
-
-
             <button type="button" ref={ref} className="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                 Launch static backdrop modal
             </button>
@@ -97,12 +83,11 @@ function Notes(props) {
                     {notes.length === 0 && 'Empty Notes'}
                 </div>
                 {notes.map((note) => {
-                    return <Noteitem key={note._id} updateNote={updateNote} showAlert={props.showAlert} note={note} />
-
+                    return <Noteitem key={note._id} updateNote={updateNote} showAlert={props.showAlert} note={note} />;
                 })}
             </div>
         </>
-    )
+    );
 }
 
-export default Notes
+export default Notes;

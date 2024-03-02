@@ -6,8 +6,8 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import { Provider } from 'react-redux';
-import store from './redux/Store';
+// recoil
+import { RecoilRoot } from 'recoil';
 
 
 
@@ -26,7 +26,7 @@ export default function App() {
   }
   return (
     <>
-      <Provider store={store}>
+      <RecoilRoot>
         <BrowserRouter>
           <Navbar showAlert={showAlert} />
           <Alert alert={alert} />
@@ -39,7 +39,8 @@ export default function App() {
             </Routes>
           </div>
         </BrowserRouter>
-      </Provider>
+      </RecoilRoot>
+
 
     </>
   )

@@ -1,11 +1,13 @@
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
-import { getNotes, addNote, deleteNote, editNote } from '../redux/slices/noteSlice';
+// recoil
+import { useRecoilState } from 'recoil';
+import { notesState } from '../store/atoms/noteAtoms';
 
 const host = 'http://localhost:5000/api/v1';
 
 const useNotes = () => {
-    const dispatch = useDispatch();
+    const setNotes = useRecoilState(notesState)[1];
+    // const [notes, setNotes] = useRecoilState(notesState);
 
     const fetchNotes = async () => {
         try {
@@ -16,8 +18,7 @@ const useNotes = () => {
                 }
             });
 
-
-            dispatch(getNotes(response.data));
+            setNotes(response.data);
 
         } catch (error) {
             console.log(error);
@@ -33,7 +34,7 @@ const useNotes = () => {
                 }
             });
             console.log("hook-fetchAddNote", response.data);
-            dispatch(addNote(response.data));
+            setNotes(prevNotes => [...prevNotes, response.data]);
         } catch (error) {
             console.log(error);
         }
@@ -47,7 +48,7 @@ const useNotes = () => {
                     Authorization: `Bearer ${jwtToken}`,
                 }
             });
-            dispatch(deleteNote(id));
+            setNotes(prevNotes => prevNotes.filter(note => note._id !== id));
         } catch (error) {
             console.log(error);
         }
@@ -62,7 +63,13 @@ const useNotes = () => {
                 }
             });
 
-            dispatch(editNote({ id, title, description, tag }));
+            setNotes(prevNotes =>
+                prevNotes.map(note =>
+                    note._id === id
+                        ? { ...note, title, description, tag }
+                        : note
+                )
+            );
 
         } catch (error) {
             console.log(error);
