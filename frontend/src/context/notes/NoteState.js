@@ -11,7 +11,7 @@ const NoteState = (props) => {
     const getNotes = async () => {
         try {
             const jwtToken = localStorage.getItem('token');
-            const response = await axios.get(`${host}/fetchnotes`, {
+            const response = await axios.get(`${host}/api/v1//fetchnotes`, {
                 headers: {
                     Authorization: `Bearer ${jwtToken}`,
                 }
@@ -41,7 +41,7 @@ const NoteState = (props) => {
     const deleteNote = async (id) => {
         try {
             const jwtToken = localStorage.getItem('token');
-            await axios.delete(`${host}/deleteNote/${id}`, {
+            await axios.delete(`${host}/api/v1/deleteNote/${id}`, {
                 headers: {
                     Authorization: `Bearer ${jwtToken}`,
                 }
@@ -56,7 +56,7 @@ const NoteState = (props) => {
     const editNote = async (id, title, description, tag) => {
         try {
             const jwtToken = localStorage.getItem('token');
-            await axios.put(`${host}/updateNote/${id}`, { title, description, tag }, {
+            await axios.put(`${host}/api/v1/updateNote/${id}`, { title, description, tag }, {
                 headers: {
                     Authorization: `Bearer ${jwtToken}`,
                 }
