@@ -9,7 +9,7 @@ const Login = (props) => {
     const host = process.env.REACT_APP_BACKEND_HOST;
     const handleSubmit = async (e) => {
         e.preventDefault();
-        axios.post(`${host}/login`, credentials)
+        axios.post(`${host}/api/v1/login`, credentials)
             .then(response => {
                 console.log(response)
                 localStorage.setItem('token', response.data.token);
