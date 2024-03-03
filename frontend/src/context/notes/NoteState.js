@@ -11,7 +11,7 @@ const NoteState = (props) => {
     const getNotes = async () => {
         try {
             const jwtToken = localStorage.getItem('token');
-            const response = await axios.get(`${host}/api/v1//fetchnotes`, {
+            const response = await axios.get(`${host}/api/v1/fetchnotes`, {
                 headers: {
                     Authorization: `Bearer ${jwtToken}`,
                 }
