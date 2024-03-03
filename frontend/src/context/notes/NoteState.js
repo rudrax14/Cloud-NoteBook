@@ -2,8 +2,10 @@ import NoteContext from "./noteContext";
 import { useState } from "react";
 import axios from "axios";
 
+
 const NoteState = (props) => {
-    const host = 'http://localhost:5000/api/v1';
+    const host = process.env.REACT_APP_BACKEND_HOST || "http://localhost:5000/api/v1";
+    console.log(host);
     const [notes, setNotes] = useState([]);
 
     // Get all notes
