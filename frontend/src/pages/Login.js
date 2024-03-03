@@ -6,10 +6,10 @@ import axios from 'axios';
 const Login = (props) => {
     const [credentials, setCredentials] = useState({ email: "", password: "" })
     let navigate = useNavigate();
-
+    const host = process.env.REACT_APP_BACKEND_HOST;
     const handleSubmit = async (e) => {
         e.preventDefault();
-        axios.post('http://localhost:5000/api/v1/login', credentials)
+        axios.post(`${host}/login`, credentials)
             .then(response => {
                 console.log(response)
                 localStorage.setItem('token', response.data.token);
