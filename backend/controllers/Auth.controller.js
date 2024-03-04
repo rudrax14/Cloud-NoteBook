@@ -7,59 +7,47 @@ exports.register = async (req, res) => {
     try {
         const { name, email, password } = req.body;
 
-        // check if all fields are filled
+        // Check if all fields are filled
         if (!name || !email || !password) {
             return res.status(400).json({
                 success: false,
                 message: "Please fill all the fields",
-            })
+            });
         }
 
-        // check if user already exist 
+        // Check if user already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({
                 success: false,
                 message: "User Already Exists",
-            })
+            });
         }
 
-        // Secured password using bcrypt
-        let hashedPassword;
-        try {
-            hashedPassword = await bcrypt.hash(password, 10);
-        }
-        catch (err) {
-            return res.status(500).json({
-                success: false,
-                message: "Error in hashing password",
-            })
-        }
-        console.log(hashedPassword);
-
-
+        // Secure password using bcrypt
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         // Create Entry for User
-        let user = await User.create({
+        const user = await User.create({
             name,
             email,
             password: hashedPassword,
-            role
+            // If role is required, make sure it's defined in the request or provide a default value
         });
 
-        return res.status(200).json({
+        return res.status(201).json({
             success: true,
             message: "User Created Successfully",
             data: user
         });
     } catch (err) {
-        console.error(err)
+        console.error("Error in user registration:", err);
         return res.status(500).json({
             success: false,
-            message: "User cannot be register,Please try again later",
-        })
+            message: "User registration failed. Please try again later.",
+        });
     }
-}
+};
 
 exports.login = async (req, res) => {
     try {

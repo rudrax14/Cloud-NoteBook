@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import noteContext from '../context/notes/noteContext'
 import Noteitem from './Noteitem';
+import Spinner from './Spinner';
 function Notes(props) {
     let navigate = useNavigate();
     const context = useContext(noteContext)
@@ -14,7 +15,6 @@ function Notes(props) {
         else {
             navigate("/login");
         }
-        // eslint-disable-next-line
     }, [])
     const [note, setNote] = useState({ id: '', etitle: '', edescription: '', etag: '' })
 
